@@ -1,7 +1,12 @@
 import React from "react";
+import Header from "@/components/Header";
 
 const index = () => {
-  return <h1 className="text-3xl font-bold">Welcome to Dalay Dai.</h1>;
+  return (
+    <>
+      <Header />
+    </>
+  );
 };
 
 export default index;
