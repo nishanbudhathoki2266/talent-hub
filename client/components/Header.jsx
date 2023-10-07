@@ -13,7 +13,7 @@ export default function Header() {
     <header className="bg-white border-b shadow-sm sticky top-0 z-40 flex justify-between items-center px-3 container mx-auto">
       <Link
         href="/"
-        className="text-xl md:text-3xl font-bold tracking-widest cursor-pointer"
+        className="text-xl md:text-2xl font-bold tracking-widest cursor-pointer"
       >
         DALAY DAI
       </Link>
