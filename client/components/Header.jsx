@@ -1,26 +1,42 @@
-import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 export default function Header() {
+  const router = useRouter();
+
+  const matchPath = (route) => {
+    if (route === router.asPath) return true;
+    return false;
+  };
+
   return (
     <header className="bg-white border-b shadow-sm sticky top-0 z-40 flex justify-between items-center px-3 container mx-auto">
-      <h2 className="text-xl md:text-3xl font-bold tracking-widest">
+      <Link
+        href="/"
+        className="text-xl md:text-3xl font-bold tracking-widest cursor-pointer"
+      >
         DALAY DAI
-      </h2>
+      </Link>
       <div>
         <ul className="flex space-x-10">
           <li
-            className={`cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent `}
+            className={`cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent ${
+              matchPath("/") && "text-black border-b-red-500"
+            }`}
           >
             <Link href="/">Home</Link>
           </li>
           <li
-            className={`cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent`}
+            className={`cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent ${
+              matchPath("/offers") && "text-black border-b-red-500"
+            }`}
           >
             <Link href="/offers">Offers</Link>
           </li>
           <li
-            className={`cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent "
+            className={`cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent ${
+              matchPath("/signin") && "text-black border-b-red-500"
+            }"
             }`}
           >
             <Link href="/signin">Sign In</Link>
