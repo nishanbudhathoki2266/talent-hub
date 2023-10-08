@@ -5,8 +5,11 @@ export default function Header() {
   const router = useRouter();
 
   const matchPath = (route) => {
-    if (route === router.asPath) return true;
-    return false;
+    if (route === router.asPath) {
+      return true;
+    } else {
+      return false;
+    }
   };
 
   return (
@@ -21,14 +24,14 @@ export default function Header() {
         <ul className="flex space-x-10">
           <li
             className={`cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent ${
-              matchPath("/") && "text-black border-b-red-500"
+              matchPath("/") ? "text-black border-b-red-500" : ""
             }`}
           >
             <Link href="/">Home</Link>
           </li>
           <li
             className={`cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent ${
-              matchPath("/offers") && "text-black border-b-red-500"
+              matchPath("/offers") ? "text-black border-b-red-500" : ""
             }`}
           >
             <Link href="/offers">Offers</Link>
