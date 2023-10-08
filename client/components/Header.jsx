@@ -38,11 +38,11 @@ export default function Header() {
           </li>
           <li
             className={`cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent ${
-              matchPath("/signin") ? "text-black border-b-red-500" : ""
+              matchPath("/sign-in") ? "text-black border-b-red-500" : ""
             }"
             }`}
           >
-            <Link href="/signin">Sign In</Link>
+            <Link href="/sign-in">Sign In</Link>
           </li>
         </ul>
       </div>
