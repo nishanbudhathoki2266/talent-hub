@@ -38,7 +38,7 @@ export default function Header() {
           </li>
           <li
             className={`cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent ${
-              matchPath("/signin") && "text-black border-b-red-500"
+              matchPath("/signin") ? "text-black border-b-red-500" : ""
             }"
             }`}
           >
