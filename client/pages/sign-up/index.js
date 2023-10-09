@@ -18,6 +18,10 @@ const SignUpPage = () => {
     }));
   }
 
+  const onSubmit = (e) => {
+    e.preventDefault();
+  };
+
   return (
     <section>
       <h1 className="text-3xl text-center mt-6 font-bold">Sign Up</h1>
