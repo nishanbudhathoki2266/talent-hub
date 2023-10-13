@@ -4,19 +4,67 @@ import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 import { useForm } from "react-hook-form";
 import OAuth from "@/components/OAuth";
 import FormError from "@/components/FormError";
+import {
+  createUserWithEmailAndPassword,
+  getAuth,
+  updateProfile,
+} from "firebase/auth";
+import { db } from "@/firebase";
+import { doc, serverTimestamp, setDoc } from "firebase/firestore";
+import { useRouter } from "next/router";
 
 const SignUpPage = () => {
+  // router
+  const router = useRouter();
+
+  // react hook form
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
   } = useForm();
+
+  // Hide and Show password with eye button
   const [showPassword, setShowPassword] = useState(false);
 
-  const onSubmit = (data) => {
-    console.log(data, "The Form data");
-    reset();
+  // Form submit handler
+  const onSubmit = async (data) => {
+    const { email, password, fullName } = data;
+
+    try {
+      const auth = getAuth();
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      // Adding a displayName (fullName) to the auth user
+      updateProfile(auth.currentUser, {
+        displayName: fullName,
+      });
+
+      // We get user like this
+      const user = userCredential.user;
+
+      // Also we need to save the user to our database. And we don't wanna add password to the db.
+      const formDataCopy = { ...data };
+      delete formDataCopy.password;
+      // Setting some timestamp describing when the user was created
+      formDataCopy.timestamp = serverTimestamp();
+
+      // Make a new user collection and also save the user data -> Note that the auth is only used for authentication, it won't save any user in the db. So we should do it manually
+      await setDoc(doc(db, "users", user.uid), formDataCopy);
+
+      // Reset the form after all operations
+      reset();
+
+      // Finally push the user to the home page
+      router.push("/");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
