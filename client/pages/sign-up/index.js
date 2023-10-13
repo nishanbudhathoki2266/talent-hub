@@ -3,13 +3,20 @@ import { useState } from "react";
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 import { useForm } from "react-hook-form";
 import OAuth from "@/components/OAuth";
+import FormError from "@/components/FormError";
 
 const SignUpPage = () => {
-  const { register, handleSubmit } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm();
   const [showPassword, setShowPassword] = useState(false);
 
   const onSubmit = (data) => {
     console.log(data, "The Form data");
+    reset();
   };
 
   return (
@@ -19,25 +26,45 @@ const SignUpPage = () => {
         className="px-6 py-12 max-w-4xl mx-auto"
         onSubmit={handleSubmit(onSubmit)}
       >
+        {errors.fullName && <FormError errors={errors.fullName.message} />}
         <input
           type="text"
           placeholder="Full name"
           className="mb-6 w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition ease-in-out"
-          {...register("fullName")}
+          {...register("fullName", {
+            required: "Please enter your full name!",
+            maxLength: 20,
+          })}
         />
+        {errors.email && <FormError errors={errors.email.message} />}
         <input
           type="email"
           placeholder="Email address"
           className="mb-6 w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition ease-in-out"
-          {...register("email")}
+          {...register("email", {
+            required: "Email is required",
+            pattern: {
+              value: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
+              message: "Please enter a valid email!",
+            },
+          })}
         />
+
+        {errors.password && <FormError errors={errors.password.message} />}
         <div className="relative mb-6">
           <input
             type={showPassword ? "text" : "password"}
             placeholder="Password"
             className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition ease-in-out"
-            {...register("password")}
+            {...register("password", {
+              required: "Please enter a password",
+              minLength: {
+                value: 8,
+                message: "Password must be at least 6 characters",
+              },
+            })}
           />
+
           {showPassword ? (
             <AiFillEyeInvisible
               className="absolute right-3 top-3 text-xl cursor-pointer"
@@ -50,6 +77,7 @@ const SignUpPage = () => {
             />
           )}
         </div>
+
         <div className="flex justify-between whitespace-nowrap text-sm sm:text-lg">
           <p className="mb-6">
             Have an account?
