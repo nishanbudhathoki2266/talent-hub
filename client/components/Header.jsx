@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
@@ -18,7 +19,7 @@ export default function Header() {
         href="/"
         className="text-xl md:text-2xl font-bold tracking-widest cursor-pointer"
       >
-        DALAY DAI
+        <Image src="/assets/logo.png" height={50} width={120} alt="logo" />
       </Link>
       <div>
         <ul className="flex space-x-10">
@@ -28,13 +29,6 @@ export default function Header() {
             }`}
           >
             <Link href="/">Home</Link>
-          </li>
-          <li
-            className={`cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent ${
-              matchPath("/offers") ? "text-black border-b-red-500" : ""
-            }`}
-          >
-            <Link href="/offers">Offers</Link>
           </li>
           <li
             className={`cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent ${
