@@ -12,6 +12,7 @@ import {
 import { db } from "@/firebase";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { useRouter } from "next/router";
+import { toast } from "react-toastify";
 
 const SignUpPage = () => {
   // router
@@ -60,10 +61,13 @@ const SignUpPage = () => {
       // Reset the form after all operations
       reset();
 
+      // Toast the message
+      toast.success("Signed up successfully!");
+
       // Finally push the user to the home page
       router.push("/");
     } catch (error) {
-      console.log(error);
+      toast.error("Something went wrong!");
     }
   };
 
