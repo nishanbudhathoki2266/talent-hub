@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import FormError from "@/components/FormError";
 import { toast } from "react-toastify";
+import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 
 const SignInPage = () => {
   // react hook form
@@ -12,7 +13,15 @@ const SignInPage = () => {
   } = useForm();
 
   const onSubmit = async (data) => {
-    console.log(data);
+    const { email } = data;
+    try {
+      const auth = getAuth();
+      await sendPasswordResetEmail(auth, email);
+      toast.success("Email was sent successfully");
+      reset();
+    } catch (err) {
+      toast.error(err.message);
+    }
   };
 
   return (
@@ -42,7 +51,7 @@ const SignInPage = () => {
           className="w-full bg-blue-600 text-white px-7 py-3 text-sm font-medium uppercase rounded shadow-md hover:bg-blue-700 transition duration-150 ease-in-out hover:shadow-lg active:bg-blue-800"
           type="submit"
         >
-          Sent Reset Password
+          Send Reset Password
         </button>
       </form>
     </section>
