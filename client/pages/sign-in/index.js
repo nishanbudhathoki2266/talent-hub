@@ -7,15 +7,9 @@ import { useForm } from "react-hook-form";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import FormError from "@/components/FormError";
 import { toast } from "react-toastify";
+import setCookie from "@/utils/setCookie";
 
 const SignInPage = () => {
-  const setCookie = (name, value, days) => {
-    const date = new Date();
-    date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
-    const expires = "expires=" + date.toUTCString();
-    document.cookie = name + "=" + value + ";" + expires + ";path=/";
-  };
-
   // router
   const router = useRouter();
 

@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
 import { db } from "@/firebase";
 import { useRouter } from "next/router";
+import setCookie from "@/utils/setCookie";
 
 export default function OAuth() {
   const router = useRouter();
@@ -17,6 +18,8 @@ export default function OAuth() {
 
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
+
+      setCookie("isLoggedIn", true, 7);
 
       // Check if there is a user, if not we add the details and save to the database
       const docRef = doc(db, "users", user.uid);
