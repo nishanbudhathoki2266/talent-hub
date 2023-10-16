@@ -9,6 +9,13 @@ import FormError from "@/components/FormError";
 import { toast } from "react-toastify";
 
 const SignInPage = () => {
+  const setCookie = (name, value, days) => {
+    const date = new Date();
+    date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+    const expires = "expires=" + date.toUTCString();
+    document.cookie = name + "=" + value + ";" + expires + ";path=/";
+  };
+
   // router
   const router = useRouter();
 
@@ -32,7 +39,7 @@ const SignInPage = () => {
 
       // For future need
       // const user = userCredential.user;
-
+      setCookie("isLoggedIn", true, 7);
       toast.success("Signed in succesfully");
       reset();
       router.push("/");

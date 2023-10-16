@@ -19,7 +19,9 @@ export default function Header() {
         href="/"
         className="text-xl md:text-2xl font-bold tracking-widest cursor-pointer"
       >
-        <Image src="/assets/logo.png" height={50} width={120} alt="logo" />
+        <h2 className="uppercase text-black tracking-tighter">
+          Talent <span className="text-secondary">Hub</span>
+        </h2>
       </Link>
       <div>
         <ul className="flex space-x-10">
