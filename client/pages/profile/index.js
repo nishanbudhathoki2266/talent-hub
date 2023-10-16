@@ -1,16 +1,20 @@
 import "@/firebase";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 const ProfilePage = () => {
+  const auth = getAuth();
+  const router = useRouter();
+
   const [userDetails, setUserDetails] = useState({});
   const [isLoadingDetails, setIsLoadingDeatils] = useState(true);
 
   const { displayName, email } = userDetails;
 
   useEffect(() => {
-    const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
       if (user) {
         setUserDetails({
@@ -22,6 +26,23 @@ const ProfilePage = () => {
       setIsLoadingDeatils(false);
     });
   }, []);
+
+  // Function to delete cookie
+  function deleteCookie(name) {
+    document.cookie =
+      name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  }
+
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth);
+      deleteCookie("isLoggedIn");
+      router.push("/sign-in");
+      toast.success("Signed out successfully!");
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
 
   return (
     <section className="max-w-6xl mx-auto flex justify-center items-center flex-col">
@@ -53,7 +74,10 @@ const ProfilePage = () => {
                 Edit
               </span>
             </p>
-            <p className="text-blue-600 hover:text-blue-800 transition duration-200 ease-in-out cursor-pointer">
+            <p
+              onClick={handleSignOut}
+              className="text-blue-600 hover:text-blue-800 transition duration-200 ease-in-out cursor-pointer"
+            >
               Sign out
             </p>
           </div>
