@@ -20,6 +20,7 @@ const SignInPage = () => {
     formState: { errors },
     reset,
   } = useForm();
+
   const [showPassword, setShowPassword] = useState(false);
 
   const onSubmit = async (data) => {
@@ -30,6 +31,7 @@ const SignInPage = () => {
       // For future need
       // const userCredential = await signInWithEmailAndPassword(
       await signInWithEmailAndPassword(auth, email, password);
+      console.log(auth);
 
       // For future need
       // const user = userCredential.user;

@@ -1,14 +1,15 @@
 import { NextResponse } from "next/server";
 
-// This function can be marked `async` if using `await` inside
 export function middleware(request) {
-  const isLoggedIn = Boolean(request.cookies?.get("isLoggedIn")?.value);
+  const currentUser = request.cookies?.has("currentUser");
+  console.log(currentUser);
+  console.log(currentUser);
 
-  if (!isLoggedIn) {
-    return NextResponse.redirect(new URL("/sign-in", request.url));
-  }
+  // if (!isLoggedIn) {
+  //   return NextResponse.redirect(new URL("/sign-in", request.url));
+  // }
 }
 
 export const config = {
-  matcher: ["//:path*", "/profile/:path"],
+  matcher: ["/profile/:path"],
 };

@@ -40,6 +40,13 @@ export default function Header() {
           >
             <Link href="/sign-in">Sign In</Link>
           </li>
+          <li
+            className={`cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent ${
+              matchPath("/profile") ? "text-black border-b-red-500" : ""
+            }`}
+          >
+            <Link href="/profile">Profile</Link>
+          </li>
         </ul>
       </div>
     </header>
