@@ -1,7 +1,12 @@
 import FormError from "@/components/FormError";
-import "@/firebase";
-import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
-import Link from "next/link";
+import { db } from "@/firebase";
+import {
+  getAuth,
+  onAuthStateChanged,
+  signOut,
+  updateProfile,
+} from "firebase/auth";
+import { doc, updateDoc } from "firebase/firestore";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -54,10 +59,26 @@ const ProfilePage = () => {
     }
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     if (!changeDetail) return;
-    console.log("FORM DATA", data);
-    setChangeDetail(false);
+
+    try {
+      // We only want to update the name if the name is really changed
+      if (auth.currentUser.displayName !== data.fullName) {
+        // Update the display name in auth
+        await updateProfile(auth.currentUser, { displayName: data.fullName });
+
+        // update the display name in firestore
+        const docRef = doc(db, "users", auth.currentUser.uid);
+        await updateDoc(docRef, {
+          name: data.fullName,
+        });
+        toast.success("Profile details updated sucessfully");
+      }
+      setChangeDetail(false);
+    } catch (err) {
+      toast.error(err.message);
+    }
   };
 
   return (
