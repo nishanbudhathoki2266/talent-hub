@@ -88,6 +88,11 @@ const ProfilePage = () => {
         <form onSubmit={handleSubmit(onSubmit)}>
           {/* Name Input */}
           {errors.fullName && <FormError errors={errors.fullName.message} />}
+          {errors?.fullName?.type === "maxLength" && (
+            <FormError
+              errors={"Your full name must not exceed 20 characters"}
+            />
+          )}
           <input
             disabled={!changeDetail}
             {...register("fullName", {
