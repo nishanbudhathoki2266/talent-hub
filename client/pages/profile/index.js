@@ -11,7 +11,6 @@ const ProfilePage = () => {
   const auth = getAuth();
   const router = useRouter();
 
-  const [userDetails, setUserDetails] = useState({});
   const [changeDetail, setChangeDetail] = useState(false);
 
   const {
@@ -29,12 +28,6 @@ const ProfilePage = () => {
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        setUserDetails({
-          ...userDetails,
-          fullName: user.displayName,
-          email: user.email,
-        });
-
         // Reset the form with user details
         reset({
           fullName: user.displayName,
