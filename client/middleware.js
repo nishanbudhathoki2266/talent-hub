@@ -1,13 +1,11 @@
 import { NextResponse } from "next/server";
 
 export function middleware(request) {
-  const currentUser = request.cookies?.has("currentUser");
-  console.log(currentUser);
-  console.log(currentUser);
+  const currentUser = request.cookies.has("currentUser");
 
-  // if (!isLoggedIn) {
-  //   return NextResponse.redirect(new URL("/sign-in", request.url));
-  // }
+  if (!currentUser) {
+    return NextResponse.redirect(new URL("/sign-in", request.url));
+  }
 }
 
 export const config = {
