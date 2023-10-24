@@ -24,9 +24,7 @@ export default function Header() {
       </Link>
       <div>
         <ul className="flex space-x-10">
-          <li
-            className={`cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent `}
-          >
+          <li className="cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent">
             <Link
               href="/"
               className={`${
@@ -38,9 +36,7 @@ export default function Header() {
               Home
             </Link>
           </li>
-          <li
-            className={`cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent`}
-          >
+          <li className="cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent">
             <Link
               href="/sign-in"
               className={`${
@@ -52,9 +48,7 @@ export default function Header() {
               Sign In
             </Link>
           </li>
-          <li
-            className={`cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent `}
-          >
+          <li className="cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent">
             <Link
               href="/profile"
               className={`${
