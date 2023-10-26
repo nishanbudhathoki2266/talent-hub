@@ -1,4 +1,4 @@
-import getIsLoggedIn from "@/utils/getCookie";
+import { db } from "@/firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Link from "next/link";
 import { useRouter } from "next/router";
