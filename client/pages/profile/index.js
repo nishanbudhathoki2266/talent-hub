@@ -71,7 +71,7 @@ const ProfilePage = () => {
         // update the display name in firestore
         const docRef = doc(db, "users", auth.currentUser.uid);
         await updateDoc(docRef, {
-          name: data.fullName,
+          fullName: data.fullName,
         });
         toast.success("Profile details updated sucessfully");
       }
