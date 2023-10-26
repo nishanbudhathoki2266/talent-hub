@@ -33,7 +33,7 @@ const Index = () => {
     <section className="text-gray-600 divide-y-8 divide-white body-font overflow-hidden container py-4 mx-auto">
       {talents?.map((talent) => (
         <div className="py-6 px-4 bg-gray-200 hover:bg-gray-300 hover:-translate-y-1 cursor-pointer transition-all ease-out duration-300 rounded flex flex-wrap items-center justify-between md:flex-nowrap gap-4">
-          <div className="md:w-48 w-40 h-40 md:mb-0 mb-6 flex-shrink-0 relative rounded">
+          <div className="md:w-48 aspect-square md:mb-0 mb-6 flex-shrink-0 relative rounded">
             <Image
               src={talent.profileImageUrl || "/assets/default-user.png"}
               alt={`${talent.fullName}'s picture`}
@@ -43,7 +43,7 @@ const Index = () => {
           </div>
           <div className="md:flex-grow">
             <h2 className="text-2xl font-medium text-gray-900 title-font mb-2">
-              Bitters hashtag waistcoat fashion axe chia unicorn
+              {talent.fullName}
             </h2>
             <p className="leading-relaxed">
               Glossier echo park pug, church-key sartorial biodiesel
