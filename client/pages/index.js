@@ -31,7 +31,7 @@ const Index = () => {
   return (
     <section className="text-gray-600 divide-y-8 divide-white body-font overflow-hidden container py-4 mx-auto">
       {talents?.map((talent) => (
-        <div className="py-8 px-4 bg-gray-200 hover:bg-gray-300 transition-all ease-out duration-1000 rounded flex flex-wrap md:flex-nowrap">
+        <div className="py-8 px-4 bg-gray-200 hover:bg-gray-300 hover:-translate-y-1 cursor-pointer transition-all ease-out duration-300 rounded flex flex-wrap md:flex-nowrap">
           <div className="md:w-64 md:mb-0 mb-6 flex-shrink-0 flex flex-col">
             <span className="font-semibold title-font text-gray-700">
               {talent.fullName}

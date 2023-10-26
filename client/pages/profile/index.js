@@ -135,18 +135,21 @@ const ProfilePage = () => {
         />
 
         {image ? (
-          <span
-            onClick={handleImageUpload}
-            className={`text-white bg-primary p-2 rounded-full text-md hover:scale-105 absolute bottom-2 right-0 ${
-              isUploadingProfileImage ? "animate-spin" : ""
-            }`}
-          >
-            {isUploadingProfileImage ? (
-              <AiOutlineLoading />
-            ) : (
-              <MdFileDownloadDone />
-            )}
-          </span>
+          <>
+            <span
+              onClick={handleImageUpload}
+              className={`text-white bg-primary p-2 rounded-full text-md hover:scale-105 absolute bottom-2 right-0 ${
+                isUploadingProfileImage ? "animate-spin" : ""
+              }`}
+            >
+              {isUploadingProfileImage ? (
+                <AiOutlineLoading />
+              ) : (
+                <MdFileDownloadDone />
+              )}
+            </span>
+            <span className="absolute bottom-4 left-40 text-xs">Ready</span>
+          </>
         ) : (
           <span
             onClick={() => fileRef.current.click()}
