@@ -31,11 +31,11 @@ const SignInPage = () => {
       // For future need
       // const userCredential = await signInWithEmailAndPassword(
       await signInWithEmailAndPassword(auth, email, password);
-      console.log(auth);
 
       // For future need
       // const user = userCredential.user;
-      setCookie("isLoggedIn", true, 7);
+
+      setCookie("currentUser", auth.currentUser, 10);
       toast.success("Signed in succesfully");
       reset();
       router.push("/");

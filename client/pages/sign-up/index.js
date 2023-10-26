@@ -58,6 +58,8 @@ const SignUpPage = () => {
       // Make a new user collection and also save the user data -> Note that the auth is only used for authentication, it won't save any user in the db. So we should do it manually
       await setDoc(doc(db, "users", user.uid), formDataCopy);
 
+      setCookie("currentUser", auth.currentUser, 10);
+
       // Reset the form after all operations
       reset();
 
@@ -67,7 +69,7 @@ const SignUpPage = () => {
       // Finally push the user to the home page
       router.push("/");
     } catch (error) {
-      toast.error("Something went wrong!");
+      toast.error(error.message);
     }
   };
 
