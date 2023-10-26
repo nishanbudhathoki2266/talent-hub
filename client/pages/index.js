@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/firebase";
+import Image from "next/image";
 
 const Index = () => {
   const [talents, setTalents] = useState([]);
@@ -31,12 +32,14 @@ const Index = () => {
   return (
     <section className="text-gray-600 divide-y-8 divide-white body-font overflow-hidden container py-4 mx-auto">
       {talents?.map((talent) => (
-        <div className="py-8 px-4 bg-gray-200 hover:bg-gray-300 hover:-translate-y-1 cursor-pointer transition-all ease-out duration-300 rounded flex flex-wrap md:flex-nowrap">
-          <div className="md:w-64 md:mb-0 mb-6 flex-shrink-0 flex flex-col">
-            <span className="font-semibold title-font text-gray-700">
-              {talent.fullName}
-            </span>
-            <span className="mt-1 text-gray-500 text-sm">12 Jun 2019</span>
+        <div className="py-6 px-4 bg-gray-200 hover:bg-gray-300 hover:-translate-y-1 cursor-pointer transition-all ease-out duration-300 rounded flex flex-wrap items-center justify-between md:flex-nowrap gap-4">
+          <div className="md:w-48 w-40 h-40 md:mb-0 mb-6 flex-shrink-0 relative rounded">
+            <Image
+              src={talent.profileImageUrl || "/assets/default-user.png"}
+              alt={`${talent.fullName}'s picture`}
+              layout="fill"
+              objectFit="cover"
+            />
           </div>
           <div className="md:flex-grow">
             <h2 className="text-2xl font-medium text-gray-900 title-font mb-2">
