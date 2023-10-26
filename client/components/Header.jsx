@@ -3,11 +3,13 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import Loader from "./Loader";
 
 export default function Header() {
   const auth = getAuth();
   // state for maintaing authenticated state
   const [isLoggedIn, setIsLoggedIn] = useState(null);
+  const [isLoadingUserDetails, setIsLoadingUserDetails] = useState(false);
   const router = useRouter();
 
   const matchPath = (route) => {
@@ -20,6 +22,7 @@ export default function Header() {
 
   // Check if there is user logged in
   useEffect(() => {
+    setIsLoadingUserDetails(true);
     // Also can check logged in state with cookies, here is a firebase way
     onAuthStateChanged(auth, (user) => {
       if (user) setIsLoggedIn(true);
@@ -29,7 +32,11 @@ export default function Header() {
     // const isAuth = getIsLoggedIn();
     // if (isAuth) setIsLoggedIn(true);
     // else setIsLoggedIn(false);
-  });
+
+    setIsLoadingUserDetails(false);
+  }, []);
+
+  if (isLoadingUserDetails) return <Loader />;
 
   return (
     <header className="bg-white border-b shadow-sm sticky top-0 z-40 flex justify-between items-center px-3 container mx-auto">
