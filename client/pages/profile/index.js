@@ -8,13 +8,31 @@ import {
 } from "firebase/auth";
 import { doc, updateDoc } from "firebase/firestore";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
+import { ref, uploadBytes, getDownloadURL, getStorage } from "firebase/storage";
+import Image from "next/image";
+import { BsFillPencilFill } from "react-icons/bs";
+import { MdFileDownloadDone } from "react-icons/md";
+import { AiOutlineLoading } from "react-icons/ai";
+
+// Function to delete cookie
+function deleteCookie(name) {
+  document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+}
 
 const ProfilePage = () => {
   const auth = getAuth();
   const router = useRouter();
+  const storage = getStorage();
+
+  // For image input
+  const fileRef = useRef(null);
+
+  // State to hold the image URL
+  const [image, setImage] = useState(null);
+  const [isUploadingProfileImage, setIsUploadingProfileImage] = useState(false);
 
   const [changeDetail, setChangeDetail] = useState(false);
 
@@ -42,20 +60,32 @@ const ProfilePage = () => {
     });
   }, []);
 
-  // Function to delete cookie
-  function deleteCookie(name) {
-    document.cookie =
-      name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-  }
+  const handleImageUpload = async () => {
+    const imageRef = ref(storage, `profileImages/${auth.currentUser.uid}`);
 
-  const handleSignOut = async () => {
+    setIsUploadingProfileImage(true);
     try {
-      await signOut(auth);
-      deleteCookie("currentUser");
-      router.push("/sign-in");
-      toast.success("Signed out successfully!");
-    } catch (err) {
-      toast.error(err.message);
+      // Upload the image to Firebase Storage using put method
+      await uploadBytes(imageRef, image);
+
+      // Get the download URL for the uploaded image
+      const imageURL = await getDownloadURL(imageRef);
+
+      // Update the image URL in Firestore
+      const docRef = doc(db, "users", auth.currentUser.uid);
+      await updateDoc(docRef, {
+        profileImageUrl: imageURL,
+      });
+
+      // Update the image URL in auth
+      await updateProfile(auth.currentUser, { photoURL: imageURL });
+
+      setImage(null);
+      toast.success("Profile image updated successfully");
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setIsUploadingProfileImage(false);
     }
   };
 
@@ -81,11 +111,63 @@ const ProfilePage = () => {
     }
   };
 
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth);
+      deleteCookie("currentUser");
+      router.push("/sign-in");
+      toast.success("Signed out successfully!");
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
+
   return (
     <section className="max-w-6xl mx-auto flex justify-center items-center flex-col">
       <h1 className="text-3xl text-center mt-6 font-bold">My Profile</h1>
+      <div className="mx-auto mt-6 rounded-full border-2 shadow-lg cursor-pointer justify-center items-center relative h-40 w-40">
+        <Image
+          src={auth?.currentUser?.photoURL || "/assets/default-user.png"}
+          alt={`Avatar`}
+          layout="fill"
+          objectFit="cover"
+          className="rounded-full"
+        />
+
+        {image ? (
+          <span
+            onClick={handleImageUpload}
+            className={`text-white bg-primary p-2 rounded-full text-md hover:scale-105 absolute bottom-2 right-0 ${
+              isUploadingProfileImage ? "animate-spin" : ""
+            }`}
+          >
+            {isUploadingProfileImage ? (
+              <AiOutlineLoading />
+            ) : (
+              <MdFileDownloadDone />
+            )}
+          </span>
+        ) : (
+          <span
+            onClick={() => fileRef.current.click()}
+            className=" text-white bg-primary p-2 rounded-full text-md hover:scale-105 absolute bottom-2 right-0"
+          >
+            <BsFillPencilFill />
+          </span>
+        )}
+      </div>
+
       <div className="w-full md:w-[50%] mt-6 px-3">
         <form onSubmit={handleSubmit(onSubmit)}>
+          {/* Image Input */}
+          <input
+            type="file"
+            ref={fileRef}
+            accept="image/*"
+            hidden
+            onChange={(e) => setImage(e.target.files[0])}
+          />
+
           {/* Name Input */}
           {errors.fullName && <FormError errors={errors.fullName.message} />}
           {errors?.fullName?.type === "maxLength" && (
@@ -115,7 +197,7 @@ const ProfilePage = () => {
             <p className="flex items-center ">
               {changeDetail
                 ? `Click the button below to save changes`
-                : "Want to change your name?"}
+                : "Want to change your details?"}
               {changeDetail || (
                 <span
                   onClick={() => setChangeDetail(true)}
@@ -138,7 +220,7 @@ const ProfilePage = () => {
               type="submit"
               className="w-full bg-blue-600 text-white uppercase px-7 py-3 text-sm font-medium rounded shadow-md hover:bg-blue-700 transition duration-150 ease-in-out hover:shadow-lg active:bg-blue-800"
             >
-              Update Your Details
+              Save Changes
             </button>
           )}
         </form>
