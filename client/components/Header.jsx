@@ -1,9 +1,11 @@
 import getIsLoggedIn from "@/utils/getCookie";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 export default function Header() {
+  const auth = getAuth();
   // state for maintaing authenticated state
   const [isLoggedIn, setIsLoggedIn] = useState(null);
   const router = useRouter();
@@ -16,11 +18,17 @@ export default function Header() {
     }
   };
 
+  // Check if there is user logged in
   useEffect(() => {
-    // Using document to get access to available cookies
-    const isAuth = getIsLoggedIn();
-    if (isAuth) setIsLoggedIn(true);
-    else setIsLoggedIn(false);
+    // Also can check logged in state with cookies, here is a firebase way
+    onAuthStateChanged(auth, (user) => {
+      if (user) setIsLoggedIn(true);
+      else setIsLoggedIn(false);
+    });
+    // Using document to get access to available cookies (side effect)
+    // const isAuth = getIsLoggedIn();
+    // if (isAuth) setIsLoggedIn(true);
+    // else setIsLoggedIn(false);
   });
 
   return (
