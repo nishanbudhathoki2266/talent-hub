@@ -55,7 +55,7 @@ export default function Header() {
               href="/"
               className={`${
                 matchPath("/")
-                  ? "text-black border-b-2 border-spacing-2 border-b-red-500"
+                  ? "text-black border-b-2 border-b-red-500 py-2"
                   : ""
               }`}
             >
@@ -68,11 +68,11 @@ export default function Header() {
                 href="/sign-in"
                 className={`${
                   matchPath("/sign-in")
-                    ? "text-black border-b-2 border-spacing-2 border-b-red-500"
+                    ? "text-black border-b-2 border-b-red-500 py-2"
                     : ""
                 }`}
               >
-                Sign In
+                Sign In As A Talent
               </Link>
             </li>
           )}
@@ -82,7 +82,7 @@ export default function Header() {
                 href="/profile"
                 className={`${
                   matchPath("/profile")
-                    ? "text-black border-b-2 border-spacing-2 border-b-red-500"
+                    ? "text-black border-b-2 border-b-red-500 py-2"
                     : ""
                 }`}
               >
