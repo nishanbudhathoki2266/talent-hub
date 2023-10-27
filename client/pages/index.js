@@ -8,7 +8,7 @@ const Index = () => {
   const [talents, setTalents] = useState([]);
 
   // Setting limit (how many users are shown in a page)
-  const [talentsLimit, setTalentsLimit] = useState(4);
+  const [talentsLimit, setTalentsLimit] = useState(5);
 
   const handleScroll = () => {
     const scrollY = window.scrollY;
@@ -16,11 +16,11 @@ const Index = () => {
     const bodyHeight = document.body.offsetHeight;
 
     if (scrollY + windowHeight >= bodyHeight - 200) {
-      setTalentsLimit((limit) => limit + 4);
+      setTalentsLimit((limit) => limit + 5);
     }
   };
 
-  const debouncedHandleScroll = debounce(handleScroll, 250);
+  const debouncedHandleScroll = debounce(handleScroll, 100);
 
   useEffect(() => {
     window.addEventListener("scroll", debouncedHandleScroll);
