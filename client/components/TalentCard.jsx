@@ -3,10 +3,9 @@ import Link from "next/link";
 import React from "react";
 
 const TalentCard = ({ talent }) => {
-  console.log(talent);
   return (
-    <article className="py-6 px-4 bg-gray-200 hover:bg-gray-300 hover:-translate-y-1 transition-all ease-out duration-300 rounded flex flex-wrap items-center justify-between md:flex-nowrap gap-4">
-      <span className="md:w-48 aspect-square md:mb-0 mb-6 flex-shrink-0 relative rounded">
+    <article className="py-6 px-4 bg-gray-200 hover:bg-gray-300 hover:-translate-y-1 transition-all ease-out duration-300 rounded flex flex-wrap items-center justify-between md:flex-nowrap gap-6">
+      <span className="md:w-44 aspect-square md:mb-0 mb-6 flex-shrink-0 relative rounded overflow-hidden">
         <Image
           src={talent.profileImageUrl || "/assets/default-user.png"}
           alt={`${talent.fullName}'s picture`}
@@ -19,10 +18,9 @@ const TalentCard = ({ talent }) => {
           {talent.fullName}
         </h2>
         <p className="leading-relaxed font-medium">
-          Glossier echo park pug, church-key sartorial biodiesel vexillologist
-          pop-up snackwave ramps cornhole. Marfa 3 wolf moon party messenger bag
-          selfies, poke vaporware kombucha lumbersexual pork belly polaroid
-          hoodie portland craft beer.
+          I am well versed with JavaScript including Node Js, React Js, Next Js
+          and Gatsby. Also well familiarized with SQL, NoSQL databases including
+          ready made dbs like Firebase and Supabase.
         </p>
         <span className="text-gray-500 block font-extralight italic text-sm mt-2">
           Joined on{" "}
