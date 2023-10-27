@@ -50,7 +50,7 @@ const SignUpPage = () => {
       const user = userCredential.user;
 
       // Also we need to save the user to our database. And we don't wanna add password to the db.
-      const formDataCopy = { ...data };
+      const formDataCopy = { ...data, uid: user.uid };
       delete formDataCopy.password;
       // Setting some timestamp describing when the user was created
       formDataCopy.timestamp = serverTimestamp();

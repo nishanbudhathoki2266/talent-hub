@@ -3,6 +3,7 @@ import Link from "next/link";
 import React from "react";
 
 const TalentCard = ({ talent }) => {
+  console.log(talent);
   return (
     <article className="py-6 px-4 bg-gray-200 hover:bg-gray-300 hover:-translate-y-1 transition-all ease-out duration-300 rounded flex flex-wrap items-center justify-between md:flex-nowrap gap-4">
       <span className="md:w-48 aspect-square md:mb-0 mb-6 flex-shrink-0 relative rounded">
@@ -33,7 +34,7 @@ const TalentCard = ({ talent }) => {
         </span>
         <Link
           className="text-indigo-500 inline-flex items-center mt-2"
-          href="#"
+          href={`talent/${talent.uid}`}
         >
           Learn More
           <svg

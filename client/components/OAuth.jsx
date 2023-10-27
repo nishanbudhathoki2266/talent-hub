@@ -27,7 +27,8 @@ export default function OAuth() {
 
       if (!docSnap.exists()) {
         await setDoc(docRef, {
-          name: user.displayName,
+          uid: user.uid,
+          fullName: user.displayName,
           email: user.email,
           timestamp: serverTimestamp(),
         });
@@ -37,8 +38,7 @@ export default function OAuth() {
       toast.success("Authentication successfull!");
       router.push("/");
     } catch (err) {
-      console.log(err);
-      toast.error("Couldn't authorize with Google!");
+      toast.error(err.message);
     }
   };
   return (
