@@ -20,7 +20,7 @@ const Index = () => {
     }
   };
 
-  const debouncedHandleScroll = debounce(handleScroll, 200);
+  const debouncedHandleScroll = debounce(handleScroll, 250);
 
   useEffect(() => {
     window.addEventListener("scroll", debouncedHandleScroll);
