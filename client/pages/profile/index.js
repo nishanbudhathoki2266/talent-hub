@@ -200,7 +200,7 @@ const ProfilePage = () => {
             <p className="flex items-center ">
               {changeDetail
                 ? `Click the button below to save changes`
-                : "Want to change your details?"}
+                : "Want to change your name?"}
               {changeDetail || (
                 <span
                   onClick={() => setChangeDetail(true)}
