@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { collection, getDocs, limit, query } from "firebase/firestore";
+import { collection, getDocs, limit, query, where } from "firebase/firestore";
 import { db } from "@/firebase";
 import TalentCard from "@/components/TalentCard";
 import { debounce } from "debounce";
@@ -33,7 +33,11 @@ const Index = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       const usersRef = collection(db, "users");
-      const usersCollection = query(usersRef, limit(talentsLimit));
+      const usersCollection = query(
+        usersRef,
+        where("isAvailable", "==", true),
+        limit(talentsLimit)
+      );
       const querySnapshot = await getDocs(usersCollection);
 
       const talentsData = [];

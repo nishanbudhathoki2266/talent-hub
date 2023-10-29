@@ -18,12 +18,10 @@ const TalentCard = ({ talent }) => {
           {talent.fullName}
         </h2>
         <p className="leading-relaxed font-medium">
-          I am well versed with JavaScript including Node Js, React Js, Next Js
-          and Gatsby. Also well familiarized with SQL, NoSQL databases including
-          ready made dbs like Firebase and Supabase.
+          {talent.bio.slice(0, 200) + "...."}
         </p>
         <span className="text-gray-500 block font-extralight italic text-sm mt-2">
-          Joined on{" "}
+          Joined on
           {new Date(talent.timestamp.seconds * 1000).toLocaleString("en-US", {
             year: "numeric",
             month: "long",
