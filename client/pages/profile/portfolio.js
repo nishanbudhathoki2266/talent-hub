@@ -277,7 +277,7 @@ const AddPortfolioPage = () => {
                     <span className="font-semibold uppercase">Duration: </span>
                     {experience.duration} year/s
                   </h5>
-                  <p className="font-medium">
+                  <p className="font-medium text-justify">
                     <span className="font-semibold uppercase">
                       Description:{" "}
                     </span>
