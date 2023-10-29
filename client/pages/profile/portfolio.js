@@ -154,12 +154,40 @@ const AddPortfolioPage = () => {
             : "Add Experience"}
         </button>
 
-        <h2 className="text-2xl font-bold">Your Experiences</h2>
-        {experiences
-          .filter((exp) => exp.hasOwnProperty("duration"))
-          .map((filteredExp) => (
-            <p>{filteredExp.position}</p>
-          ))}
+        {/* Showing added experience */}
+        {experiences.length === 0 || (
+          <div>
+            <h2 className="text-xl font-semibold tracking-wide uppercase mt-2 mb-1">
+              Added Experiences
+            </h2>
+            <ul className="space-y-2">
+              {experiences.map((experience, index) => (
+                <li className="list-disc font-semibold space-y-1">
+                  <h3 className="text-md uppercase flex justify-between items-start">
+                    {experience.position}{" "}
+                    <button
+                      onClick={() => removeExperience(index)}
+                      type="button"
+                      className="font-medium bg-red-600 text-white text-xs uppercase px-2 py-1 rounded-sm"
+                    >
+                      Remove
+                    </button>
+                  </h3>
+                  <h5 className="font-medium">
+                    <span className="font-semibold uppercase">Duration: </span>
+                    {experience.duration} year/s
+                  </h5>
+                  <p className="font-medium">
+                    <span className="font-semibold uppercase">
+                      Description:{" "}
+                    </span>
+                    {experience.description}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         <div>
           <label>Skills</label>
