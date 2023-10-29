@@ -2,6 +2,7 @@ import { db } from "@/firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { AiOutlineMail } from "react-icons/ai";
@@ -87,9 +88,18 @@ const TalentDetailsPage = () => {
           {/* Availability */}
           {isOwnProfile ||
             (talentDetails?.isAvailable && (
-              <button className="bg-green-600 w-1/2 text-white uppercase px-7 py-3 mt-2 text-sm font-medium rounded shadow-md hover:bg-green-700 transition duration-150 ease-in-out hover:shadow-lg active:bg-green-800 mb-2">
+              <Link
+                href={`mailto:${
+                  talentDetails?.email
+                }?subject=${encodeURIComponent(
+                  "Hiring for a project"
+                )}&body=${encodeURIComponent(
+                  `Hey! ${talentDetails?.fullName}! I am writing this.....`
+                )}`}
+                className="bg-green-600 max-w-fit text-white uppercase px-7 py-3 mt-2 text-sm font-medium rounded shadow-md hover:bg-green-700 transition duration-150 ease-in-out hover:shadow-lg active:bg-green-800 mb-2"
+              >
                 Reach Out
-              </button>
+              </Link>
             ))}
         </div>
       </section>
