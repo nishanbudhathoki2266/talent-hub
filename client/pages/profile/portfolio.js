@@ -1,8 +1,8 @@
 import FormError from "@/components/FormError";
 import { db } from "@/firebase";
-import { getAuth } from "firebase/auth";
-import { doc, updateDoc } from "firebase/firestore";
-import React, { useState } from "react";
+import { getAuth, onAuthStateChanged, updateProfile } from "firebase/auth";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
@@ -25,6 +25,32 @@ const AddPortfolioPage = () => {
   const [showExperienceForm, setShowExperienceForm] = useState(true);
 
   const [skills, setSkills] = useState([]);
+
+  // For displaying availability of the user
+  const [isAvailable, setIsAvailable] = useState(false);
+
+  useEffect(() => {
+    const fetchMyPortfolio = async () => {
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          const userRef = doc(db, "users", user.uid);
+          const userDetails = await getDoc(userRef);
+
+          if (userDetails.exists()) {
+            const portfolioDetails = userDetails.data();
+            setExperiences(portfolioDetails.experiences);
+            setSkills(portfolioDetails.skills);
+            setIsAvailable(portfolioDetails.isAvailable);
+            reset({
+              role: portfolioDetails.role,
+              bio: portfolioDetails.bio,
+            });
+          }
+        }
+      });
+    };
+    fetchMyPortfolio();
+  }, []);
 
   const toggleExperienceForm = () => {
     setShowExperienceForm((currState) => !currState);
@@ -62,11 +88,12 @@ const AddPortfolioPage = () => {
     }
 
     try {
+      // Update the details in auth
+      await updateProfile(auth.currentUser, formattedData);
+
       // update the details in firestore
       const docRef = doc(db, "users", auth.currentUser.uid);
-      await updateDoc(docRef, {
-        ...formattedData,
-      });
+      await updateDoc(docRef, formattedData);
       toast.success("Portfolio Updated Successfully!");
     } catch (err) {
       toast.error(err.message);
@@ -100,6 +127,7 @@ const AddPortfolioPage = () => {
             Bio
           </label>
           <textarea
+            rows={8}
             {...register("bio", {
               required: "Bio is required",
               maxLength: 1000,
@@ -149,7 +177,8 @@ const AddPortfolioPage = () => {
               {...register("experiences.description", {
                 required: "Description is required",
               })}
-              className="mb-6 w-full min-h-[12vh] px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300"
+              rows={8}
+              className="mb-6 w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300"
             />
 
             <button
@@ -288,7 +317,7 @@ const AddPortfolioPage = () => {
           <input
             type="checkbox"
             {...register("isAvailable")}
-            defaultChecked={true} // Set the initial switch value to active
+            defaultChecked={isAvailable} // Set the initial switch value to active
           />
           Availability
         </label>
