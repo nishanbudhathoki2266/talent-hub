@@ -97,7 +97,9 @@ const ProfilePage = () => {
       // We only want to update the name if the name is really changed
       if (auth.currentUser.displayName !== data.fullName) {
         // Update the display name in auth
-        await updateProfile(auth.currentUser, { displayName: data.fullName });
+        await updateProfile(auth.currentUser, {
+          displayName: data.fullName,
+        });
 
         // update the display name in firestore
         const docRef = doc(db, "users", auth.currentUser.uid);
@@ -190,7 +192,7 @@ const ProfilePage = () => {
             }`}
           />
           {/* Email Input */}
-
+          {/* Here it is disabled because the user can't update email */}
           <input
             {...register("email")}
             disabled
@@ -201,7 +203,7 @@ const ProfilePage = () => {
             <p className="flex items-center ">
               {changeDetail
                 ? `Click the button below to save changes`
-                : "Want to change your name?"}
+                : "Want to your name?"}
               {changeDetail || (
                 <span
                   onClick={() => setChangeDetail(true)}
@@ -234,12 +236,6 @@ const ProfilePage = () => {
         >
           Add or Update Your portfolio
         </Link>
-        <section className="mt-6">
-          <h2 className="text-2xl font-semibold tracking-tight text-center">
-            Your Portfolio
-          </h2>
-          ALL DETAILS
-        </section>
       </div>
     </section>
   );

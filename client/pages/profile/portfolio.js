@@ -32,6 +32,7 @@ const AddPortfolioPage = () => {
   useEffect(() => {
     const fetchMyPortfolio = async () => {
       onAuthStateChanged(auth, async (user) => {
+        console.log(user);
         if (user) {
           const userRef = doc(db, "users", user.uid);
           const userDetails = await getDoc(userRef);
@@ -44,6 +45,8 @@ const AddPortfolioPage = () => {
             reset({
               role: portfolioDetails.role,
               bio: portfolioDetails.bio,
+              phoneNumber: portfolioDetails.phoneNumber,
+              address: portfolioDetails.address,
             });
           }
         }
@@ -107,6 +110,36 @@ const AddPortfolioPage = () => {
         onSubmit={handleSubmit(onSubmit)}
         className="w-full lg:w-[60%] mt-6 px-3"
       >
+        {/* Phone */}
+        {errors.phoneNumber && (
+          <FormError errors={errors.phoneNumber.message} />
+        )}
+        <label className="text-md font-medium tracking-wide text-gray-500">
+          Phone
+        </label>
+        <input
+          type="tel"
+          {...register("phoneNumber", {
+            required: "Please enter your phone number!",
+            minLength: 10,
+          })}
+          className="mb-6 w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition ease-in-out"
+          placeholder="Enter your phone number"
+        />
+
+        {/* Address */}
+        <label className="text-md font-medium tracking-wide text-gray-500">
+          Address
+        </label>
+        {errors.address && <FormError errors={errors.address.message} />}
+        <input
+          type="text"
+          {...register("address", {
+            required: "Please enter your address!",
+          })}
+          className="mb-6 w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition ease-in-out"
+          placeholder="Enter your Address"
+        />
         <div>
           {errors.role && <FormError errors={errors.role.message} />}
           <label className="text-md font-medium tracking-wide text-gray-500">
