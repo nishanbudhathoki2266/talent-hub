@@ -1,13 +1,22 @@
-// pages/portfolio-details.js
+import FormError from "@/components/FormError";
+import { db } from "@/firebase";
+import { getAuth } from "firebase/auth";
+import { doc, updateDoc } from "firebase/firestore";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 
 const AddPortfolioPage = () => {
+  const auth = getAuth();
+
   const {
     register,
     handleSubmit,
     setValue,
+    setError,
     getValues,
+    clearErrors,
+    reset,
     formState: { errors },
   } = useForm();
 
@@ -15,64 +24,78 @@ const AddPortfolioPage = () => {
 
   const [showExperienceForm, setShowExperienceForm] = useState(true);
 
+  const [skills, setSkills] = useState([]);
+
   const toggleExperienceForm = () => {
     setShowExperienceForm((currState) => !currState);
   };
-
-  const [skills, setSkills] = useState([]);
-
-  console.log("STATE EXP: ", experiences);
 
   const addExperience = ({ duration, position, description }) => {
     setExperiences([...experiences, { duration, position, description }]);
   };
 
   const removeExperience = (index) => {
-    console.log("You clicked index: ", index);
     setExperiences(experiences.filter((_, i) => i !== index));
   };
 
-  const addSkill = () => {
-    setSkills([...skills, ""]);
+  const addSkill = (skill) => {
+    setSkills([...skills, skill]);
   };
 
   const removeSkill = (index) => {
-    setSkills(skills.filter((_, i) => i !== index + 1));
+    setSkills(skills.filter((_, i) => i !== index));
   };
 
-  const onSubmit = (data) => {
-    // Submit the data to your backend
-    // console.log(data);
-
-    console.log({
+  const onSubmit = async (data) => {
+    const formattedData = {
       ...data,
-      experiences: experiences.filter((exp) => exp.hasOwnProperty("duration")),
-    });
+      experiences,
+      skills,
+    };
 
-    // TODO: Submit formattedData to your backend
+    if (!formattedData.skills.length > 0) {
+      setError("skills", {
+        type: "required",
+        message: "Please enter at least one skill!",
+      });
+      return;
+    }
+
+    try {
+      // update the details in firestore
+      const docRef = doc(db, "users", auth.currentUser.uid);
+      await updateDoc(docRef, {
+        ...formattedData,
+      });
+      toast.success("Portfolio Updated Successfully!");
+    } catch (err) {
+      toast.error(err.message);
+    }
   };
 
   return (
-    <section className="max-w-6xl mx-auto flex justify-center items-center flex-col">
-      <h1 className="text-3xl text-center mt-6 font-bold">Add Portfolio</h1>
+    <section className="max-w-6xl mx-auto pb-8 flex justify-center items-center flex-col">
+      <h1 className="text-3xl text-center mt-6 font-bold">Your Portfolio</h1>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="w-full md:w-[50%] mt-6 px-3"
+        className="w-full lg:w-[60%] mt-6 px-3"
       >
         <div>
+          {errors.role && <FormError errors={errors.role.message} />}
           <label className="text-md font-medium tracking-wide text-gray-500">
-            Position
+            Role
           </label>
           <input
             type="text"
-            {...register("position", {
-              required: "Position is required",
+            placeholder="Web Developer"
+            {...register("role", {
+              required: "Role is required",
             })}
             className="mb-6 w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded"
           />
-          {errors.position && <p>{errors.position.message}</p>}
         </div>
         <div>
+          {errors.bio && <FormError errors={errors.bio.message} />}
           <label className="text-md font-medium tracking-wide text-gray-500">
             Bio
           </label>
@@ -83,19 +106,30 @@ const AddPortfolioPage = () => {
             })}
             className="mb-6 w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300"
           />
-          {errors.bio && <p>{errors.bio.message}</p>}
         </div>
         {showExperienceForm && (
           <div className="flex flex-col">
             <label className="text-md font-medium tracking-wide text-gray-500">
               Experiences (Add as many you want - One at a time)
             </label>
-
+            {errors.experiences && (
+              <span className="flex flex-wrap justify-between items-center">
+                {errors.experiences.duration && (
+                  <FormError errors={errors.experiences.duration.message} />
+                )}
+                {errors.experiences.position && (
+                  <FormError errors={errors.experiences.position.message} />
+                )}
+                {errors.experiences.description && (
+                  <FormError errors={errors.experiences.description.message} />
+                )}
+              </span>
+            )}
             <div className="w-full flex flex-wrap justify-between items-center">
               <input
                 type="number"
                 placeholder="Work Duration (in years)"
-                {...register(`duration`, {
+                {...register("experiences.duration", {
                   required: "Work duration is required",
                 })}
                 className="mb-6 px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300"
@@ -103,7 +137,7 @@ const AddPortfolioPage = () => {
               <input
                 type="text"
                 placeholder="Your Position"
-                {...register(`position`, {
+                {...register("experiences.position", {
                   required: "Position is required",
                 })}
                 className="mb-6 px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300"
@@ -112,7 +146,7 @@ const AddPortfolioPage = () => {
             <textarea
               type="text"
               placeholder="Work Description"
-              {...register(`description`, {
+              {...register("experiences.description", {
                 required: "Description is required",
               })}
               className="mb-6 w-full min-h-[12vh] px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300"
@@ -121,18 +155,18 @@ const AddPortfolioPage = () => {
             <button
               type="button"
               onClick={() => {
-                const duration = getValues("duration");
-                const position = getValues("position");
-                const description = getValues("description");
+                const duration = getValues("experiences.duration");
+                const position = getValues("experiences.position");
+                const description = getValues("experiences.description");
                 if (!duration || !position || !description) return;
                 addExperience({
                   duration,
                   position,
                   description,
                 });
-                setValue("duration", "");
-                setValue("position", "");
-                setValue("description", "");
+                setValue("experiences.duration", "");
+                setValue("experiences.position", "");
+                setValue("experiences.description", "");
                 setShowExperienceForm(false);
               }}
               className="bg-blue-600 text-white uppercase px-7 py-3 text-sm font-medium rounded shadow-md hover:bg-blue-700 transition duration-150 ease-in-out hover:shadow-lg active:bg-blue-800 mb-2"
@@ -144,25 +178,29 @@ const AddPortfolioPage = () => {
 
         <button
           type="button"
-          className="w-full bg-blue-600 text-white uppercase px-7 py-3 text-sm font-medium rounded shadow-md hover:bg-blue-700 transition duration-150 ease-in-out hover:shadow-lg active:bg-blue-800 mb-2"
+          className={`w-full ${
+            showExperienceForm
+              ? "bg-red-600 hover:bg-red-700 active:bg-red-800"
+              : "bg-blue-600 hover:bg-blue-700 "
+          } text-white uppercase mb-4 px-7 py-3 text-sm font-medium rounded shadow-md transition duration-150 ease-in-out hover:shadow-lg`}
           onClick={() => toggleExperienceForm()}
         >
           {showExperienceForm
             ? "Don't wanna Add?"
             : experiences.length > 0
-            ? "Add More"
+            ? "Add More Experience"
             : "Add Experience"}
         </button>
 
         {/* Showing added experience */}
         {experiences.length === 0 || (
-          <div>
+          <div className="mb-4">
             <h2 className="text-xl font-semibold tracking-wide uppercase mt-2 mb-1">
-              Added Experiences
+              Experiences
             </h2>
             <ul className="space-y-2">
               {experiences.map((experience, index) => (
-                <li className="list-disc font-semibold space-y-1">
+                <li key={index} className="list-disc font-semibold space-y-1">
                   <h3 className="text-md uppercase flex justify-between items-start">
                     {experience.position}{" "}
                     <button
@@ -189,29 +227,77 @@ const AddPortfolioPage = () => {
           </div>
         )}
 
-        <div>
-          <label>Skills</label>
-          <ul>
-            {skills.map((_, index) => (
-              <li key={index}>
-                <input
-                  type="text"
-                  placeholder="Skill"
-                  {...register(`skills.${index}`, {
-                    required: "Skill is required",
-                  })}
-                />
-                <button type="button" onClick={() => removeSkill(index)}>
-                  Remove
-                </button>
-              </li>
-            ))}
-          </ul>
-          <button type="button" onClick={addSkill}>
-            Add Skill
-          </button>
+        <div className="flex flex-col gap-2 justify-center mb-4">
+          <label className="text-md font-medium tracking-wide text-gray-500">
+            Skills (You can add more)
+          </label>
+          {errors.skills && <FormError errors={errors.skills.message} />}
+          <div className="flex flex-wrap gap-2 items-center">
+            <input
+              type="text"
+              {...register("skills.skill")}
+              className="px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300"
+            />
+            <button
+              type="button"
+              className="bg-blue-600 text-white uppercase px-7 py-3 text-sm font-medium rounded shadow-md hover:bg-blue-700 transition duration-150 ease-in-out hover:shadow-lg active:bg-blue-800"
+              onClick={() => {
+                const skill = getValues("skills.skill");
+                if (!skill || skills.includes(skill.toLowerCase())) {
+                  setError("skills", {
+                    type: "required",
+                    message:
+                      "Please enter at least one skill or ensure that the skills are unique",
+                  });
+                  return;
+                }
+                clearErrors("skills");
+                addSkill(skill.toLowerCase());
+                setValue("skills.skill", "");
+              }}
+            >
+              +
+            </button>
+          </div>
+          {/* Showing added skills */}
+          {skills.length === 0 || (
+            <ul className="flex flex-wrap gap-2 items-center">
+              {skills.map((skill, index) => (
+                <li
+                  key={index}
+                  className="list-none text-gray-400 bg-gray-200 px-2"
+                >
+                  <p className="text-md uppercase flex gap-1">
+                    {skill}
+                    <button
+                      onClick={() => removeSkill(index)}
+                      type="button"
+                      className="font-medium"
+                    >
+                      X
+                    </button>
+                  </p>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
-        <button type="submit">Submit</button>
+
+        {/* Availability */}
+        <label className="text-md font-medium tracking-wide text-gray-500 flex gap-1 items-center mb-4">
+          <input
+            type="checkbox"
+            {...register("isAvailable")}
+            defaultChecked={true} // Set the initial switch value to active
+          />
+          Availability
+        </label>
+        <button
+          type="submit"
+          className="bg-blue-600 w-full text-white uppercase px-7 py-3 text-sm font-medium rounded shadow-md hover:bg-blue-700 transition duration-150 ease-in-out hover:shadow-lg active:bg-blue-800"
+        >
+          Submit
+        </button>
       </form>
     </section>
   );
