@@ -14,14 +14,14 @@ const TalentCard = ({ talent }) => {
         />
       </span>
       <p className="md:flex-grow">
-        <h2 className="text-2xl font-semibold text-gray-900 mb-2 tracking-wide">
-          {talent.fullName}
+        <h2 className="text-2xl font-semibold text-gray-900 tracking-wide">
+          {talent.fullName} - <span className="text-xl">{talent.role}</span>
         </h2>
         <p className="leading-relaxed font-medium">
           {talent.bio.slice(0, 200) + "...."}
         </p>
         <span className="text-gray-500 block font-extralight italic text-sm mt-2">
-          Joined on
+          Joined on{" "}
           {new Date(talent.timestamp.seconds * 1000).toLocaleString("en-US", {
             year: "numeric",
             month: "long",
