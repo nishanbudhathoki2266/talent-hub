@@ -3,7 +3,7 @@ import { db } from "@/firebase";
 import { getAuth, onAuthStateChanged, updateProfile } from "firebase/auth";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
 const AddPortfolioPage = () => {
@@ -12,6 +12,7 @@ const AddPortfolioPage = () => {
   const {
     register,
     handleSubmit,
+    control,
     setValue,
     setError,
     getValues,
@@ -26,27 +27,32 @@ const AddPortfolioPage = () => {
 
   const [skills, setSkills] = useState([]);
 
-  // For displaying availability of the user
-  const [isAvailable, setIsAvailable] = useState(false);
-
   useEffect(() => {
     const fetchMyPortfolio = async () => {
       onAuthStateChanged(auth, async (user) => {
-        console.log(user);
         if (user) {
           const userRef = doc(db, "users", user.uid);
           const userDetails = await getDoc(userRef);
 
           if (userDetails.exists()) {
             const portfolioDetails = userDetails.data();
-            setExperiences(portfolioDetails.experiences);
-            setSkills(portfolioDetails.skills);
-            setIsAvailable(portfolioDetails.isAvailable);
+            console.log(portfolioDetails);
+            setExperiences(
+              portfolioDetails?.experiences?.length > 0
+                ? portfolioDetails?.experiences
+                : []
+            );
+            setSkills(
+              portfolioDetails?.skills?.length > 0
+                ? portfolioDetails?.skills
+                : []
+            );
             reset({
-              role: portfolioDetails.role,
-              bio: portfolioDetails.bio,
-              phoneNumber: portfolioDetails.phoneNumber,
-              address: portfolioDetails.address,
+              role: portfolioDetails?.role,
+              bio: portfolioDetails?.bio,
+              phoneNumber: portfolioDetails?.phoneNumber,
+              address: portfolioDetails?.address,
+              isAvailable: portfolioDetails?.isAvailable,
             });
           }
         }
@@ -347,12 +353,18 @@ const AddPortfolioPage = () => {
 
         {/* Availability */}
         <label className="text-md font-medium tracking-wide text-gray-500 flex gap-1 items-center mb-4">
-          <input
-            type="checkbox"
-            {...register("isAvailable")}
-            defaultChecked={isAvailable} // Set the initial switch value to active
+          <Controller
+            name="isAvailable"
+            control={control} // Set the initial default value (true for "Active")
+            render={({ field }) => (
+              <input type="checkbox" {...field} checked={field.value} />
+            )}
           />
-          Availability
+          Availability -{" "}
+          <span className="font-semibold">
+            Note that you will be undiscoverable if you turn off the
+            availability
+          </span>
         </label>
         <button
           type="submit"
