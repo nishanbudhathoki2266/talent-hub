@@ -62,7 +62,7 @@ const ProfilePage = () => {
   }, []);
 
   const handleImageUpload = async () => {
-    const imageRef = ref(storage, `profileImages/${auth.currentUser.uid}`);
+    const imageRef = ref(storage, `profileImages/${auth?.currentUser?.uid}`);
 
     setIsUploadingProfileImage(true);
     try {

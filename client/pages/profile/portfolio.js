@@ -2,12 +2,14 @@ import FormError from "@/components/FormError";
 import { db } from "@/firebase";
 import { getAuth, onAuthStateChanged, updateProfile } from "firebase/auth";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
 const AddPortfolioPage = () => {
   const auth = getAuth();
+  const router = useRouter();
 
   const {
     register,
@@ -104,6 +106,7 @@ const AddPortfolioPage = () => {
       const docRef = doc(db, "users", auth.currentUser.uid);
       await updateDoc(docRef, formattedData);
       toast.success("Portfolio Updated Successfully!");
+      router.push("/profile");
     } catch (err) {
       toast.error(err.message);
     }
