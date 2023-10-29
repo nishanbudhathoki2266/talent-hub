@@ -115,26 +115,28 @@ const TalentDetailsPage = () => {
       </section>
 
       {/* Experiences */}
-      <section>
-        <h3 className="text-xl tracking-tight font-semibold mt-2 uppercase">
-          Experiences
-        </h3>
-        {talentDetails?.experiences?.map((exp, index) => (
-          <div className="bg-gray-200 mt-2 py-4 px-2">
-            <h2 className="font-semibold text-md uppercase">
-              {index + 1}. {exp.position}
-            </h2>
-            <time className="text-md ml-4">
-              <span className="font-semibold"> Duration:</span> {exp.duration}{" "}
-              year/s
-            </time>
-            <p className="ml-4">
-              <span className="font-semibold">Description: </span>
-              {exp.description}
-            </p>
-          </div>
-        ))}
-      </section>
+      {talentDetails?.experiences?.length > 0 && (
+        <section>
+          <h3 className="text-xl tracking-tight font-semibold mt-2 uppercase">
+            Experiences
+          </h3>
+          {talentDetails?.experiences?.map((exp, index) => (
+            <div className="bg-gray-200 mt-2 py-4 px-2">
+              <h2 className="font-semibold text-md uppercase">
+                {index + 1}. {exp.position}
+              </h2>
+              <time className="text-md ml-4">
+                <span className="font-semibold"> Duration:</span> {exp.duration}{" "}
+                year/s
+              </time>
+              <p className="ml-4">
+                <span className="font-semibold">Description: </span>
+                {exp.description}
+              </p>
+            </div>
+          ))}
+        </section>
+      )}
 
       {/* Skills */}
       <section>

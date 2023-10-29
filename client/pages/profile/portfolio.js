@@ -255,13 +255,13 @@ const AddPortfolioPage = () => {
         </button>
 
         {/* Showing added experience */}
-        {experiences.length === 0 || (
+        {experiences?.length === 0 || (
           <div className="mb-4">
             <h2 className="text-xl font-semibold tracking-wide uppercase mt-2 mb-1">
               Experiences
             </h2>
             <ul className="space-y-2">
-              {experiences.map((experience, index) => (
+              {experiences?.map((experience, index) => (
                 <li key={index} className="list-disc font-semibold space-y-1">
                   <h3 className="text-md uppercase flex justify-between items-start">
                     {experience.position}{" "}
@@ -322,9 +322,9 @@ const AddPortfolioPage = () => {
             </button>
           </div>
           {/* Showing added skills */}
-          {skills.length === 0 || (
+          {skills?.length === 0 || (
             <ul className="flex flex-wrap gap-2 items-center">
-              {skills.map((skill, index) => (
+              {skills?.map((skill, index) => (
                 <li
                   key={index}
                   className="list-none text-gray-400 bg-gray-200 px-2"
