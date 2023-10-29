@@ -16,6 +16,7 @@ import Image from "next/image";
 import { BsFillPencilFill } from "react-icons/bs";
 import { MdFileDownloadDone } from "react-icons/md";
 import { AiOutlineLoading } from "react-icons/ai";
+import Link from "next/link";
 
 // Function to delete cookie
 function deleteCookie(name) {
@@ -124,7 +125,7 @@ const ProfilePage = () => {
 
   return (
     <section className="max-w-6xl mx-auto flex justify-center items-center flex-col">
-      <h1 className="text-3xl text-center mt-6 font-bold">My Profile</h1>
+      <h1 className="text-3xl text-center mt-6 font-bold">Profile</h1>
       <div className="mx-auto mt-6 rounded-full border-2 shadow-lg cursor-pointer justify-center items-center relative h-40 w-40">
         <Image
           src={auth?.currentUser?.photoURL || "/assets/default-user.png"}
@@ -221,12 +222,24 @@ const ProfilePage = () => {
           {changeDetail && (
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white uppercase px-7 py-3 text-sm font-medium rounded shadow-md hover:bg-blue-700 transition duration-150 ease-in-out hover:shadow-lg active:bg-blue-800"
+              className="w-full bg-blue-600 text-white uppercase px-7 py-3 text-sm font-medium rounded shadow-md hover:bg-blue-700 transition duration-150 ease-in-out hover:shadow-lg active:bg-blue-800 mb-2"
             >
               Save Changes
             </button>
           )}
         </form>
+        <Link
+          href="/profile/portfolio"
+          className="w-full block text-center bg-blue-600 text-white uppercase px-7 py-3 text-sm font-medium rounded shadow-md hover:bg-blue-700 transition duration-150 ease-in-out hover:shadow-lg active:bg-blue-800"
+        >
+          Add or Update Your portfolio
+        </Link>
+        <section className="mt-6">
+          <h2 className="text-2xl font-semibold tracking-tight text-center">
+            Your Portfolio
+          </h2>
+          ALL DETAILS
+        </section>
       </div>
     </section>
   );
