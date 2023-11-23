@@ -35,7 +35,7 @@ const SignInPage = () => {
       // For future need
       // const user = userCredential.user;
 
-      setCookie("currentUser", auth.currentUser, 10);
+      setCookie("currentUser", auth.currentUser);
       toast.success("Signed in succesfully");
       reset();
       router.push("/");
